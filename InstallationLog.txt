@@ -1,0 +1,6 @@
+************************************* Invoked: Fri Aug 21 16:11:03 2026
+[0] Arguments: C:\Users\arthu\AppData\Local\Temp\WinGet\MSYS2.MSYS2.20260611\msys2-x86_64-20260611.exe, install, --confirm-command, --root, C:\msys64
+[41] Operations sanity check succeeded.
+[58] Warning: Cannot create lock file "C:\Users\arthu\AppData\Local\Temp\msys2-x86_64-202606111234865.lock": Le processus ne peut pas accéder au fichier car ce fichier est utilisé par un autre processus.
+ (0x00000020)
+[226] Warning: Another msys2-x86_64-20260611 instance is already running. Wait until it finishes, close it, or restart your system.

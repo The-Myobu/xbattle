@@ -1,0 +1,74 @@
+name: Build xbattle
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Install X11 development dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libx11-dev
+
+      - name: Build
+        run: make CC=gcc
+
+      - name: Upload executable and game data
+        uses: actions/upload-artifact@v4
+        with:
+          name: xbattle-linux
+          path: |
+            xbattle
+            xbos/
+            xbts/
+            xbas/
+
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Install Cygwin and X11 development packages
+        uses: cygwin/cygwin-install-action@master
+        with:
+          packages: gcc-core,gcc-g++,make,libX11-devel,xorgproto
+
+      - name: Build Windows executable
+        shell: C:\cygwin\bin\bash.exe --login -eo pipefail '{0}'
+        run: make clean && make CC=gcc EXEEXT=.exe
+
+      - name: Collect Cygwin runtime DLLs
+        shell: C:\cygwin\bin\bash.exe --login -eo pipefail '{0}'
+        run: |
+          cp /usr/bin/cygwin1.dll .
+          cp /usr/bin/cyggcc_s-seh-1.dll .
+          cp /usr/bin/cygX11-6.dll .
+          cp /usr/bin/cygxcb-1.dll .
+          cp /usr/bin/cygXau-6.dll .
+          cp /usr/bin/cygXdmcp-6.dll .
+
+      - name: Upload Windows executable and game data
+        uses: actions/upload-artifact@v4
+        with:
+          name: xbattle-windows
+          path: |
+            xbattle.exe
+            cygwin1.dll
+            cyggcc_s-seh-1.dll
+            cygX11-6.dll
+            cygxcb-1.dll
+            cygXau-6.dll
+            cygXdmcp-6.dll
+            xbos/
+            xbts/
+            xbas/

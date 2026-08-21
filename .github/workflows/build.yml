@@ -44,24 +44,16 @@ jobs:
           packages: gcc-core,gcc-g++,make,libX11-devel,xorgproto
 
       - name: Build Windows executable
-        shell: C:\cygwin\bin\bash.exe --login -eo pipefail '{0}'
+        shell: pwsh
         run: |
-          workspace=$(printf '%s' "$GITHUB_WORKSPACE" | tr -d '\r')
-          cd "$(cygpath -u "$workspace" | tr -d '\r')"
-          make -f makefile clean
-          make -f makefile CC=gcc EXEEXT=.exe
+          $workspace = & C:\cygwin\bin\cygpath.exe -u $env:GITHUB_WORKSPACE
+          & C:\cygwin\bin\bash.exe --login -eo pipefail -lc "cd '$workspace'; make -f makefile clean; make -f makefile CC=gcc EXEEXT=.exe"
 
       - name: Collect Cygwin runtime DLLs
-        shell: C:\cygwin\bin\bash.exe --login -eo pipefail '{0}'
+        shell: pwsh
         run: |
-          workspace=$(printf '%s' "$GITHUB_WORKSPACE" | tr -d '\r')
-          cd "$(cygpath -u "$workspace" | tr -d '\r')"
-          cp /usr/bin/cygwin1.dll .
-          cp /usr/bin/cyggcc_s-seh-1.dll .
-          cp /usr/bin/cygX11-6.dll .
-          cp /usr/bin/cygxcb-1.dll .
-          cp /usr/bin/cygXau-6.dll .
-          cp /usr/bin/cygXdmcp-6.dll .
+          $workspace = & C:\cygwin\bin\cygpath.exe -u $env:GITHUB_WORKSPACE
+          & C:\cygwin\bin\bash.exe --login -eo pipefail -lc "cd '$workspace'; cp /usr/bin/cygwin1.dll .; cp /usr/bin/cyggcc_s-seh-1.dll .; cp /usr/bin/cygX11-6.dll .; cp /usr/bin/cygxcb-1.dll .; cp /usr/bin/cygXau-6.dll .; cp /usr/bin/cygXdmcp-6.dll ."
 
       - name: Upload Windows executable and game data
         uses: actions/upload-artifact@v4

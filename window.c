@@ -792,19 +792,8 @@ create_xwindow (xwindow, hue_title, bw_title, current_side)
 
     if (full_depth > 8)
     {
-      /** XBattle won't work for 24 bit displays with no optional	**/
-      /** visuals with 8 or 16 bits.  This may be the case on some PCs.	**/
-      /** In these cases, it may be possible to reconfigure the display	**/
-      /** to 8 or 16 bits.						**/
-
-      if (xwindow->depth > 16)
-      {
-        throw_warning ("No PseudoColor visual available\n%s",
-		"         Try changing display to <= 16 bits");
-        throw_error ("Unable to continue without colormap", NULL);
-      }
-
-      /** If display is 24 bit, have to create a dedicated colormap **/
+      /** Modern TrueColor displays use a read-only default colormap. **/
+      /** XAllocColor maps requested RGB values to the visual's pixels. **/
 
       xwindow->cmap = XCreateColormap (xwindow->display,
 			RootWindow (xwindow->display, xwindow->screen),
